@@ -5,4 +5,5 @@ use (
 	./go-movies-crud
 	./go-server
 	./slack-age-bot
+	./slack-file-bot
 )
