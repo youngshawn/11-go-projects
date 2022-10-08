@@ -1,6 +1,7 @@
 go 1.19
 
 use (
+	./aws-lambda-example
 	./email-checker-tool
 	./go-bookstore
 	./go-movies-crud
