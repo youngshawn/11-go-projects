@@ -4,6 +4,7 @@ use (
 	./aws-lambda-example
 	./email-checker-tool
 	./go-bookstore
+	./go-fiber-crm
 	./go-movies-crud
 	./go-server
 	./slack-age-bot
