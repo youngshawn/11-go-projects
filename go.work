@@ -5,6 +5,7 @@ use (
 	./email-checker-tool
 	./go-bookstore
 	./go-fiber-crm
+	./go-fiber-mongo-hrms
 	./go-movies-crud
 	./go-server
 	./slack-age-bot
