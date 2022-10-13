@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -92,6 +93,18 @@ func main() {
 
 	app.Put("/employee/:id", func(c *fiber.Ctx) error {
 		idParam := c.Params("id")
+
+		employeeID, err := primitive.ObjectIDFromHex(idParam)
+		if err != nil {
+			return c.SendStatus(400)
+		}
+
+		employee := new(Employee)
+		if err := c.BodyParser(employee); err != nil {
+			return c.Status(400).SendString(err.Error())
+		}
+
+		query := bson.D
 
 	})
 
