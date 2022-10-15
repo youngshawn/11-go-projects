@@ -23,7 +23,7 @@ const dbName = "fiber-hrms"
 const mongoURI = "mongodb://localhost:27017/" + dbName
 
 type Employee struct {
-	ID     string
+	ID     string  `json:"id,omitempty" bson:"_id, omitempty"`
 	Name   string  `json:"name"`
 	Salary float64 `json:"salary"`
 	Age    float64 `json:"age"`
@@ -58,7 +58,7 @@ func main() {
 
 	app.Get("/employee", func(c *fiber.Ctx) error {
 		query := bson.D{}
-		cur, err := mg.Db.Collection("employee").Find(c.Context(), query)
+		cur, err := mg.Db.Collection("employees").Find(c.Context(), query)
 		if err != nil {
 			return c.Status(500).SendString(err.Error())
 		}
