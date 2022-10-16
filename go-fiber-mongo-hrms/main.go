@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"log"
 	"time"
 
@@ -23,7 +25,7 @@ const dbName = "fiber-hrms"
 const mongoURI = "mongodb://localhost:27017/" + dbName
 
 type Employee struct {
-	ID     string  `json:"id,omitempty" bson:"_id, omitempty"`
+	ID     string  `json:"id,omitempty" bson:"_id,omitempty"`
 	Name   string  `json:"name"`
 	Salary float64 `json:"salary"`
 	Age    float64 `json:"age"`
@@ -78,6 +80,8 @@ func main() {
 		if err := c.BodyParser(employee); err != nil {
 			return c.Status(400).SendString(err.Error())
 		}
+		out, _ := json.Marshal(employee)
+		fmt.Println(string(out))
 		employee.ID = ""
 		insertionResult, err := collection.InsertOne(c.Context(), employee)
 		if err != nil {
