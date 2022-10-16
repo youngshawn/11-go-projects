@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"time"
 
@@ -80,8 +78,7 @@ func main() {
 		if err := c.BodyParser(employee); err != nil {
 			return c.Status(400).SendString(err.Error())
 		}
-		out, _ := json.Marshal(employee)
-		fmt.Println(string(out))
+
 		employee.ID = ""
 		insertionResult, err := collection.InsertOne(c.Context(), employee)
 		if err != nil {
@@ -113,9 +110,9 @@ func main() {
 			{
 				Key: "$set",
 				Value: bson.D{
-					{Key: "Name", Value: employee.Name},
-					{Key: "Age", Value: employee.Age},
-					{Key: "Salary", Value: employee.Salary},
+					{Key: "name", Value: employee.Name},
+					{Key: "age", Value: employee.Age},
+					{Key: "salary", Value: employee.Salary},
 				},
 			},
 		}
