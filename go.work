@@ -10,4 +10,5 @@ use (
 	./go-server
 	./slack-age-bot
 	./slack-file-bot
+	./slack-nlp-bot
 )
