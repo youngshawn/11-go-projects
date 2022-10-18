@@ -8,9 +8,13 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/krognol/go-wolfram"
 	"github.com/shomali11/slacker"
-	witai "github.com/wit-ai/wit-go/v2"
+	"github.com/tidwall/gjson"
+	"github.com/wit-ai/wit-go/v2"
 )
+
+var wolframClient *wolfram.Client
 
 func printCommandEvents(analyticsChannel <-chan *slacker.CommandEvent) {
 	for event := range analyticsChannel {
@@ -28,6 +32,7 @@ func main() {
 
 	bot := slacker.NewClient(os.Getenv("SLACK_BOT_TOKEN"), os.Getenv("SLACK_APP_TOKEN"))
 	wit := witai.NewClient(os.Getenv("WIT_AI_TOKEN"))
+	wolframClient = &wolfram.Client{AppID: os.Getenv("WOLFRAM_APP_ID")}
 
 	go printCommandEvents(bot.CommandEvents())
 
@@ -36,12 +41,22 @@ func main() {
 		Examples:    []string{"who is the president of the USA"},
 		Handler: func(botCtx slacker.BotContext, request slacker.Request, response slacker.ResponseWriter) {
 			query := request.Param("message")
+			fmt.Println(query)
 			msg, _ := wit.Parse(&witai.MessageRequest{
 				Query: query,
 			})
+
 			data, _ := json.MarshalIndent(msg, "", "    ")
-			fmt.Println(string(data))
-			response.Reply("Recieved")
+			rough := string(data)
+			fmt.Println(rough)
+			value := gjson.Get(rough, "entities.wit$wolfram_search_query:wolfram_search_query.0.value")
+			question := value.String()
+			answer, err := wolframClient.GetSpokentAnswerQuery(question, wolfram.Metric, 1000)
+			if err != nil {
+				fmt.Println("there is an error")
+			}
+
+			response.Reply(answer)
 		},
 	})
 
